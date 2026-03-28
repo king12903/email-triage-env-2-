@@ -1,0 +1,66 @@
+name: email-triage-env
+version: 1.0.0
+description: >
+  A real-world email triage environment where an AI agent learns to
+  prioritize, categorize, and respond to emails.
+
+entry_point: server:app
+
+tags:
+  - openenv
+  - email
+  - triage
+  - real-world
+
+observation_space:
+  type: object
+  fields:
+    email:
+      type: object
+      fields:
+        id: string
+        subject: string
+        body: string
+        sender: string
+    step_number: integer
+    total_steps: integer
+    task_description: string
+
+action_space:
+  type: object
+  fields:
+    priority:
+      type: string
+      enum: [high, medium, low]
+    category:
+      type: string
+      enum: [billing, support, spam, inquiry]
+    should_reply:
+      type: boolean
+    reply_text:
+      type: string
+      optional: true
+
+reward_range: [0.0, 1.0]
+
+tasks:
+  - id: easy
+    name: Spam Detection
+    difficulty: easy
+    description: Classify emails as spam or not-spam and assign priority.
+  - id: medium
+    name: Priority and Category Triage
+    difficulty: medium
+    description: Assign correct priority and category to each email.
+  - id: hard
+    name: Full Email Triage
+    difficulty: hard
+    description: Complete triage with priority, category, reply decision, and reply text.
+
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  tasks: GET /tasks
+  grader: POST /grader
+  baseline: POST /baseline
